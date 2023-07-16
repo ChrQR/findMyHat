@@ -56,15 +56,23 @@ class Field {
             this.outOfBounds();
         } else if (this.currentWidth > 2) {
             this.outOfBounds();
-        } else if (this.grid[this.currentHeight][this.currentWidth] == 'O') {
-            this.fallDeath();
+        } else {
+            this.holeOrHat();
         }
     }
     outOfBounds() {
         console.log('You moved out of bounds!\nGAME OVER');
+        //insert function call to restart game
     }
-    fallDeath() {
-        console.log('You fell to your death!\nGAME OVER')
+    holeOrHat() {
+        if (this.grid[this.currentHeight][this.currentWidth] == 'O') {
+            console.log('You fell to your death!\nGAME OVER');
+        } else if (this.grid[this.currentHeight][this.currentWidth] == '^') {
+            console.log('You found your hat!\nYOU WIN!');
+        } else {
+            return;
+        }
+        //insert function call to restart game
     }
 };
 
