@@ -6,21 +6,37 @@ const fieldCharacter = '░';
 const pathCharacter = '*';
 
 class Field {
-    constructor(grid) {
-        this.grid = grid;
+    constructor(fieldHeight, fieldWidth) {
+        this.fieldHeight = fieldHeight;
+        this.fieldWidth = fieldWidth;
+        this.grid = [];
         this.currentHeight = 0;
         this.currentWidth = 0;
     }
-    get getPosition() {
-        return [this.currentHeight, this.currentWidth];
-    }
-
     printField() {
         this.prettyGrid = [];
         for (let i = 0; i < this.grid.length; i++) {
             this.prettyGrid.push(this.grid[i].join(''));
         }
         console.log(this.prettyGrid.join('\r\n'));
+    }
+    generateField() {
+        for (let i = 0; i < this.fieldHeight; i++) {
+            this.grid.push([]);
+            for (let j = 0; j < this.fieldWidth; j++) {
+                let tileSelector = Math.floor(Math.random() * 2);
+                if (tileSelector == 0) {
+                    this.grid[i].push(hole);
+                } else{
+                    this.grid[i].push(fieldCharacter);
+                }
+            }
+        }
+        this.printField();
+        this.movePlayer();
+    }
+    resetField () {
+        this.grid = [];
     }
     movePlayer() {
         const movement = prompt('Which way do you want to go? (WASD)');
@@ -62,7 +78,8 @@ class Field {
     }
     outOfBounds() {
         console.log('You moved out of bounds!\nGAME OVER');
-        //insert function call to restart game
+        this.resetField();
+        this.generateField();
     }
     holeOrHat() {
         if (this.grid[this.currentHeight][this.currentWidth] == 'O') {
@@ -72,16 +89,12 @@ class Field {
         } else {
             return;
         }
-        //insert function call to restart game
+        this.resetField();
+        this.generateField();
     }
 };
 
 
-const myField = new Field([
-  ['*', '░', 'O'],
-  ['░', 'O', '░'],
-  ['░', '^', '░'],
-]);
+const myField = new Field(10, 10);
 
-myField.printField();
-myField.movePlayer();
+myField.generateField();
