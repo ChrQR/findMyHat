@@ -1,9 +1,5 @@
 const prompt = require('prompt-sync')({sigint: true});
 
-const hat = '^';
-const hole = 'O';
-const fieldCharacter = '░';
-const pathCharacter = '*';
 
 class Field {
     constructor(fieldHeight, fieldWidth) {
@@ -12,6 +8,10 @@ class Field {
         this.grid = [];
         this.currentHeight = 0;
         this.currentWidth = 0;
+        this.hat = '^';
+        this.hole = 'O';
+        this.fieldCharacter = '░';
+        this.pathCharacter = '*';
     }
     printField() {
         this.prettyGrid = [];
@@ -24,16 +24,27 @@ class Field {
         for (let i = 0; i < this.fieldHeight; i++) {
             this.grid.push([]);
             for (let j = 0; j < this.fieldWidth; j++) {
-                let tileSelector = Math.floor(Math.random() * 2);
-                if (tileSelector == 0) {
-                    this.grid[i].push(hole);
+                let tileSelector = Math.floor(Math.random() * 3);
+                if (tileSelector < 1) {
+                    this.grid[i].push(this.hole);
                 } else{
-                    this.grid[i].push(fieldCharacter);
+                    this.grid[i].push(this.fieldCharacter);
                 }
             }
         }
+        this.generatePlayer();
+        this.generateHat();
         this.printField();
         this.movePlayer();
+    }
+    generatePlayer() {
+        let playerStart = Math.floor(Math.random() * this.fieldWidth);
+        this.grid[0][playerStart] = this.pathCharacter;
+        this.currentWidth = playerStart;
+    }
+    generateHat() {
+        this.hatSelector = Math.floor(Math.random() * this.fieldWidth);
+        this.grid[this.fieldHeight - 1][this.hatSelector] = this.hat;
     }
     resetField () {
         this.grid = [];
@@ -66,11 +77,11 @@ class Field {
     gameOverCheck() {
         if (this.currentHeight < 0) {
             this.outOfBounds();
-        } else if (this.currentHeight > 2) {
+        } else if (this.currentHeight > this.fieldHeight) {
             this.outOfBounds();
         } else if (this.currentWidth < 0) {
             this.outOfBounds();
-        } else if (this.currentWidth > 2) {
+        } else if (this.currentWidth > this.fieldWidth) {
             this.outOfBounds();
         } else {
             this.holeOrHat();
